@@ -16,4 +16,14 @@ namespace D4Companion.Events
     {
 
     }
+
+    public class SelectedAspectsChangedEvent : PubSubEvent
+    {
+
+    }
+
+    public class SelectedSigilsChangedEvent : PubSubEvent
+    {
+
+    }
 }

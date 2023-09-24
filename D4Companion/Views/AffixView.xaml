@@ -14,7 +14,14 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:AffixIdToDescriptionConverter x:Key="AffixIdToDescriptionConverter"/>
+        <converters:AspectIdToDescriptionConverter x:Key="AspectIdToDescriptionConverter"/>
+        <converters:AspectIdToNameConverter x:Key="AspectIdToNameConverter"/>
+        <converters:SigilIdToDescriptionConverter x:Key="SigilIdToDescriptionConverter"/>
+        <converters:SigilIdToNameConverter x:Key="SigilIdToNameConverter"/>
         <converters:ColorToSolidBrushConverter x:Key="ColorToSolidBrushConverter"/>
+        <converters:FlagToImagePathConverter x:Key="FlagToImagePathConverter"/>
+        <converters:MappingReadyToVisibilityConverter x:Key="MappingReadyToVisibilityConverter"/>
+        <converters:MultiOrBooleanToVisibilityConverter x:Key="MultiOrBooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid Width="{Binding ActualWidth, RelativeSource = {RelativeSource AncestorType = {x:Type UserControl}}}" 
           Height="{Binding ActualHeight, RelativeSource ={RelativeSource AncestorType = {x:Type UserControl}}}">
@@ -32,6 +39,22 @@
                       HorizontalScrollBarVisibility="Disabled">
 
             <StackPanel Margin="0 0 0 10" Orientation="Vertical">
+
+                <ComboBox Width="125"
+                          Margin="0 0 1 0"
+                          HorizontalAlignment="Left"
+                          ItemsSource="{Binding Path=AffixLanguages}"
+                          SelectedItem="{Binding Path=SelectedAffixLanguage}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Path=Id, Converter={StaticResource FlagToImagePathConverter}}"/>
+                                <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
                 <mah:MetroHeader Margin="0 10 0 5" Header="Gear Affix Presets:">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" Margin="0 0 0 1">
@@ -58,7 +81,7 @@
                 
                 <!-- Helm -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -69,13 +92,14 @@
                             <Image Height="40" Source="/Images/head_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Helm" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) helm_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageHelmFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredHelm}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -123,7 +147,7 @@
                 
                 <!-- Chest -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -134,13 +158,14 @@
                             <Image Height="40" Source="/Images/torso_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Chest" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) chest_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageChestFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredChest}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -188,7 +213,7 @@
 
                 <!-- Gloves -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -199,13 +224,14 @@
                             <Image Height="40" Source="/Images/hands_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Gloves" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) gloves_*.png." VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageGlovesFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredGloves}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -253,7 +279,7 @@
 
                 <!-- Pants -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -264,13 +290,14 @@
                             <Image Height="40" Source="/Images/legs_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Pants" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) pants_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImagePantsFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredPants}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -318,7 +345,7 @@
 
                 <!-- Boots -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -329,13 +356,14 @@
                             <Image Height="40" Source="/Images/feet_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Boots" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) boots_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageBootsFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredBoots}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -383,7 +411,7 @@
 
                 <!-- Amulet -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -394,13 +422,14 @@
                             <Image Height="40" Source="/Images/neck_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Amulet" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) amulet_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageAmuletFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredAmulet}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -448,7 +477,7 @@
 
                 <!-- Ring -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -459,13 +488,14 @@
                             <Image Height="40" Source="/Images/ring_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Ring" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) ring_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageRingFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredRing}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -513,7 +543,7 @@
 
                 <!-- Weapon -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -524,13 +554,14 @@
                             <Image Height="40" Source="/Images/mainhand_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Weapon" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) weapon_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageWeaponFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredWeapon}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -578,7 +609,7 @@
 
                 <!-- Ranged -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -589,13 +620,14 @@
                             <Image Height="40" Source="/Images/ranged_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Ranged" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) ranged_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageRangedFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredRanged}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -643,7 +675,7 @@
 
                 <!-- Offhand -->
 
-                <Border BorderThickness="1" BorderBrush="#333333">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -654,13 +686,14 @@
                             <Image Height="40" Source="/Images/offhand_icon.png"/>
                         </Label>
                         <Label Grid.Column="1" Content="Offhand" VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type images." VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) offhand_*.png." VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageOffhandFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                             <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                         </Label>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1" BorderBrush="#333333">
-                    <ScrollViewer Height="150">
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAffixesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="150">
                         <ItemsControl ItemsSource="{Binding SelectedAffixesFilteredOffhand}" >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -706,6 +739,232 @@
                     </ScrollViewer>
                 </Border>
 
+                <!-- Aspects -->
+
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAspectsTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Margin="0" Padding="0">
+                            <Image Height="40" Source="/Images/aspect_icon.png"/>
+                        </Label>
+                        <Label Grid.Column="1" Content="Aspects" VerticalAlignment="Center"/>
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s)." VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
+                            <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
+                        </Label>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsAspectsTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="300">
+                        <ItemsControl ItemsSource="{Binding SelectedAspectsFiltered}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Grid>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="1"/>
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Grid.Column="0" Width="20" Background="{Binding Color, Converter={StaticResource ColorToSolidBrushConverter}}">
+                                                    <Label.InputBindings>
+                                                        <MouseBinding Command="{Binding Path=DataContext.SetAspectColorCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftClick" />
+                                                    </Label.InputBindings>
+                                                </Label>
+
+                                                <TextBlock Grid.Column="1" Margin="2 2 2 2" TextTrimming="CharacterEllipsis" Foreground="LightGray" FontSize="15"
+                                                           Text="{Binding Path=Id, Converter={StaticResource AspectIdToNameConverter}}" 
+                                                           ToolTip="{Binding Path=Id, Converter={StaticResource AspectIdToDescriptionConverter}}" >
+                                                    <TextBlock.InputBindings>
+                                                        <MouseBinding Command="{Binding Path=DataContext.RemoveAspectCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                                                    </TextBlock.InputBindings>
+                                                </TextBlock>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- Consumables -->
+
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsConsumablesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Margin="0" Padding="0">
+                            <Image Height="40" Source="/Images/consumable_icon.png"/>
+                        </Label>
+                        <Label Grid.Column="1" Content="Consumables" VerticalAlignment="Center"/>
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) consumable_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageConsumableFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
+                            <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
+                        </Label>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsConsumablesTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="300">
+                        <ItemsControl ItemsSource="{Binding SelectedConsumables}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Grid>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="1"/>
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <!--Not implemented yet-->
+                                        </Border>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- Sigils -->
+
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsSigilsTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Margin="0" Padding="0">
+                            <Image Height="40" Source="/Images/sigil_icon.png"/>
+                        </Label>
+                        <Label Grid.Column="1" Content="Sigils" VerticalAlignment="Center"/>
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) sigil_*.png" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageSigilFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
+                            <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
+                        </Label>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsSigilsTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="300">
+                        <ItemsControl ItemsSource="{Binding SelectedSigils}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Grid>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="1"/>
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Grid.Column="0" Width="20" Background="{Binding Color, Converter={StaticResource ColorToSolidBrushConverter}}">
+                                                    <Label.InputBindings>
+                                                        <MouseBinding Command="{Binding Path=DataContext.SetAffixColorCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftClick" />
+                                                    </Label.InputBindings>
+                                                </Label>
+
+                                                <TextBlock Grid.Column="1" Margin="2 2 2 2" TextTrimming="CharacterEllipsis" Foreground="LightGray" FontSize="15"
+                                                           Text="{Binding Path=Id, Converter={StaticResource SigilIdToNameConverter}}"
+                                                           ToolTip="{Binding Path=Id, Converter={StaticResource SigilIdToDescriptionConverter}}" >
+                                                    <TextBlock.InputBindings>
+                                                        <MouseBinding Command="{Binding Path=DataContext.RemoveSigilCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                                                    </TextBlock.InputBindings>
+                                                </TextBlock>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- Seasonal -->
+
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsSeasonalTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Margin="0" Padding="0">
+                            <Image Height="40" Source="/Images/seasonal_icon.png"/>
+                        </Label>
+                        <Label Grid.Column="1" Content="Seasonal" VerticalAlignment="Center"/>
+                        <Label Grid.Column="2" Foreground="Red" ToolTip="Missing item type image(s) seasonal_*.png." VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Visibility="{Binding Path=IsItemTypeImageSeasonalFound, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
+                            <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
+                        </Label>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="#333333" Visibility="{Binding Path=IsSeasonalTabActive, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <ScrollViewer MaxHeight="300">
+                        <ItemsControl ItemsSource="{Binding SelectedSeasonalItems}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Grid>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="1"/>
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border CornerRadius="3" Margin="3" Background="#333333">
+                                            <!--Not implemented yet-->
+                                        </Border>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
             </StackPanel>
 
         </ScrollViewer>
@@ -713,12 +972,97 @@
         <DockPanel Grid.Row="0" Grid.Column="1" Visibility="{Binding Path=IsAffixPresetSelected, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
 
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0 0 0 5">
-                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Core" IsChecked="{Binding ToggleCore}"/>
-                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Barbarian" IsChecked="{Binding ToggleBarbarian}"/>
-                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Druid" IsChecked="{Binding ToggleDruid}"/>
-                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Necromancer" IsChecked="{Binding ToggleNecromancer}"/>
-                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Rogue" IsChecked="{Binding ToggleRogue}"/>
-                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Sorcerer" IsChecked="{Binding ToggleSorcerer}"/>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Core" IsChecked="{Binding ToggleCore}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsAffixesTabActive" />
+                            <Binding Path="IsAspectsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Barbarian" IsChecked="{Binding ToggleBarbarian}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsAffixesTabActive" />
+                            <Binding Path="IsAspectsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Druid" IsChecked="{Binding ToggleDruid}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsAffixesTabActive" />
+                            <Binding Path="IsAspectsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Necromancer" IsChecked="{Binding ToggleNecromancer}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsAffixesTabActive" />
+                            <Binding Path="IsAspectsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Rogue" IsChecked="{Binding ToggleRogue}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsAffixesTabActive" />
+                            <Binding Path="IsAspectsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Sorcerer" IsChecked="{Binding ToggleSorcerer}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsAffixesTabActive" />
+                            <Binding Path="IsAspectsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Elixers" IsChecked="{Binding ToggleElixers}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsConsumablesTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Dungeons" IsChecked="{Binding ToggleDungeons}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsSigilsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Positive" IsChecked="{Binding TogglePositive}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsSigilsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Minor" IsChecked="{Binding ToggleMinor}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsSigilsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Major" IsChecked="{Binding ToggleMajor}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsSigilsTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
+                <ToggleButton MinWidth="50" Margin="0 0 5 0" Content="Caged Hearts" IsChecked="{Binding ToggleCagedHearts}">
+                    <ToggleButton.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiOrBooleanToVisibilityConverter}">
+                            <Binding Path="IsSeasonalTabActive" />
+                        </MultiBinding>
+                    </ToggleButton.Visibility>
+                </ToggleButton>
             </StackPanel>
 
             <Grid DockPanel.Dock="Top">
@@ -726,7 +1070,7 @@
                 <TextBlock Name="TextBoxFilterAffixWatermark" Grid.Row="0" Grid.Column="0" Text="Enter filter" Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5" Padding="5 0 0 0" IsHitTestVisible="False" Foreground="DimGray" FontStyle="Italic"/>
             </Grid>
 
-            <TabControl>
+            <TabControl SelectedIndex="{Binding SelectedTabIndex}">
                 <TabItem Header="Affixes">
                     <ScrollViewer>
                         <ItemsControl ItemsSource="{Binding AffixesFiltered}" >
@@ -747,11 +1091,13 @@
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
 
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                    <Label Grid.Row="0" HorizontalAlignment="Right" Foreground="Red" ToolTip="Missing images.">
+                                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                    <Label HorizontalAlignment="Right" Foreground="Red" ToolTip="Missing affix image(s)."
+                                                           Visibility="{Binding Path=IsMappingReady, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                                                         <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                                                     </Label>
-                                                    <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set image to affix mapping.">
+                                                    <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set image/affix mapping."
+                                                            Command="{Binding Path=DataContext.SetAffixMappingCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}">
                                                         <iconPacks:PackIconMaterial Width="15" Height="15" Kind="Cog" />
                                                     </Button>
                                                     <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set affix."
@@ -798,17 +1144,32 @@
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
+                                                
                                                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                                                    <Label HorizontalAlignment="Right" Foreground="Red" ToolTip="Missing images.">
+                                                    <Label HorizontalAlignment="Right" Foreground="Red" ToolTip="Missing aspect image."
+                                                           Visibility="{Binding Path=IsMappingReady, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
                                                         <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
                                                     </Label>
-                                                    <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set images.">
+                                                    <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set image/aspect mapping"
+                                                            Command="{Binding Path=DataContext.SetAspectMappingCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}">
                                                         <iconPacks:PackIconMaterial Width="15" Height="15" Kind="Cog" />
+                                                    </Button>
+                                                    <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set aspect."
+                                                            Command="{Binding Path=DataContext.SetAspectCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}">
+                                                        <iconPacks:PackIconMaterial Width="15" Height="15" Kind="PlusThick" />
                                                     </Button>
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="1" Orientation="Vertical" Margin="10 0 10 5">
-                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="LightGray" FontSize="15" />
-                                                    <TextBlock Text="{Binding Description}" ToolTip="{Binding Description}" TextWrapping="Wrap" Foreground="LightGray" FontSize="15"/>
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="LightGray" FontSize="15" >
+                                                        <TextBlock.InputBindings>
+                                                            <MouseBinding Command="{Binding Path=DataContext.SetAspectCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                                                        </TextBlock.InputBindings>
+                                                    </TextBlock>
+                                                    <TextBlock Text="{Binding Description}" ToolTip="{Binding Description}" TextWrapping="Wrap" Foreground="LightGray" FontSize="15">
+                                                        <TextBlock.InputBindings>
+                                                            <MouseBinding Command="{Binding Path=DataContext.SetAspectCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                                                        </TextBlock.InputBindings>
+                                                    </TextBlock>
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
@@ -823,6 +1184,75 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="Consumables" Visibility="{Binding Path=IsExperimentalConsumablesModeEnabled, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <TextBlock Text="Not yet implemented."/>
+                </TabItem>
+
+                <TabItem Header="Sigils">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding SigilsFiltered}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Grid>
+                                        <Border Width="300" Height="130" CornerRadius="5" Margin="5" Background="#333333">
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="1"/>
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border Width="300" Height="130" CornerRadius="5" Margin="5" Background="#333333">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+
+                                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                    <Label HorizontalAlignment="Right" Foreground="Red" ToolTip="Missing image."
+                                                           Visibility="{Binding Path=IsMappingReady, Converter={x:Static converters:InverseBooleanToVisibilityConverter.Instance}}">
+                                                        <iconPacks:PackIconMaterial Width="15" Height="15" Kind="AlertOutline" />
+                                                    </Label>
+                                                    <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set mapping"
+                                                            Command="{Binding Path=DataContext.SetSigilMappingCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}">
+                                                        <iconPacks:PackIconMaterial Width="15" Height="15" Kind="Cog" />
+                                                    </Button>
+                                                    <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Set sigil."
+                                                            Command="{Binding Path=DataContext.SetSigilCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}">
+                                                        <iconPacks:PackIconMaterial Width="15" Height="15" Kind="PlusThick" />
+                                                    </Button>
+                                                </StackPanel>
+                                                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="10 0 10 5">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="LightGray" FontSize="15" >
+                                                        <TextBlock.InputBindings>
+                                                            <MouseBinding Command="{Binding Path=DataContext.SetSigilCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                                                        </TextBlock.InputBindings>
+                                                    </TextBlock>
+                                                    <TextBlock Text="{Binding Description}" ToolTip="{Binding Description}" TextWrapping="Wrap" Foreground="LightGray" FontSize="15">
+                                                        <TextBlock.InputBindings>
+                                                            <MouseBinding Command="{Binding Path=DataContext.SetSigilCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AffixView}}}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                                                        </TextBlock.InputBindings>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="Seasonal" Visibility="{Binding Path=IsExperimentalSeasonalModeEnabled, Converter={x:Static converters:BooleanToVisibilityConverter.Instance}}">
+                    <TextBlock Text="Not yet implemented."/>
                 </TabItem>
             </TabControl>
 
